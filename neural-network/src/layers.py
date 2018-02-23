@@ -144,8 +144,22 @@ def dropout_forward(X, p=0.5, train=True, seed=42):
     ###########################################################################
     #                           BEGIN OF YOUR CODE                            #
     ###########################################################################
+    
+    # copy X to avoid by reference variable
+    out = X.copy()
+    out_shape = out.shape
 
+    # apply dropout if train
+    if train:
+    
+        # only the q number of neurons in the network will survive
+        q = 1-p
 
+        # mask will be needed to dropout p number of neurons
+        mask = np.random.binomial(n=1, p=q, size=np.prod(out_shape))
+
+        # apply mask to the existing neurons, i.e. dropout neurons
+        out = (1/q * mask * out.flatten()).reshape(out_shape)
     ###########################################################################
     #                            END OF YOUR CODE                             #
     ###########################################################################

@@ -38,6 +38,6 @@ Thumbs.db
 
 # Custom folders #
 ##################
-manuals
-env
+/manuals/
+/env/
 
