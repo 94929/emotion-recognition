@@ -38,7 +38,7 @@ Thumbs.db
 
 # Custom folders #
 ##################
-/manuals/
-/env/
-/__pycahe__/
-
+manuals
+env
+__pycahe__
+*.pyc
