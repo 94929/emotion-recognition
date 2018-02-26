@@ -122,8 +122,6 @@ class FullyConnectedNet(object):
         #                           BEGIN OF YOUR CODE                        #
         #######################################################################
 
-        # begin the implementation of forward pass
-
         linear_cache[0] = relu_cache[0] = dropout_cache[0] = X
         for i in range(1, self.num_layers+1):
             curr_id = str(i)
@@ -146,7 +144,7 @@ class FullyConnectedNet(object):
 
                 # dropout regularization
                 if self.use_dropout:
-                        dropout_cache[i] = dropout_forward(relu_cache[i], self.dropout_params['p'], self.params[W_id], self.params[b_id])
+                    dropout_cache[i] = dropout_forward(relu_cache[i], self.dropout_params['p'], self.params[W_id], self.params[b_id])
             
             # if current layer is the output layer
             else:
@@ -180,7 +178,48 @@ class FullyConnectedNet(object):
         #                           BEGIN OF YOUR CODE                        #
         #######################################################################
         
+        # use softmax to produce intermediate results, loss and dlogits
+        loss, dlogits = softmax(scores, y)
         
+        # iterate backward, output layer to input layer via hidden layers
+        for i in range(self.num_layers, 0, -1):
+
+            # set variable names
+            curr_id = str(i)
+            W_id = 'W' + curr_id
+            b_id = 'b' + curr_id
+
+            # L2 regularization
+            loss += 0.5 * self.reg * np.sum(self.params[W_id]**2)
+
+            # retrieve the result of upper layer from cache, prev_layer_output
+            prev_layer_output = relu_cache[i-1] if not self.use_dropout else dropout_cache[i-1][0]
+
+            # if current layer is the output layer
+            if i == self.num_layers:
+
+                # perform linear bacward regression to update grads for W and b
+                dX, grads[W_id], grads[b_id] = linear_backward(dlogits, prev_layer_output, self.params[W_id], self.params[b_id])
+
+            # if current layer is not the output layer
+            else:
+
+                # dropout
+                if self.use_dropout:
+                    mask = dropout_cache[i][1]
+                    p, train = self.dropout_params['p'], self.dropout_params['train']
+
+                    dX = dropout_backward(relu_cache[i], mask, p, train)
+
+                # relu
+                dX = relu_backward(dX, linear_cache[i])
+
+                # linear
+                dX, grads[W_id], grads[b_id] = linear_backward(dX, prev_layer_output, self.params[W_id], self.params[b_id])
+
+            # 
+            grads[W_id] += self.reg * self.params[W_id]
+
         #######################################################################
         #                            END OF YOUR CODE                         #
         #######################################################################
