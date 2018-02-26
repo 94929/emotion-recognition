@@ -121,8 +121,44 @@ class FullyConnectedNet(object):
         #######################################################################
         #                           BEGIN OF YOUR CODE                        #
         #######################################################################
-        
-        
+
+        # begin the implementation of forward pass
+
+        linear_cache[0] = relu_cache[0] = dropout_cache[0] = X
+        for i in range(1, self.num_layers+1):
+            curr_id = str(i)
+            W_id = 'W' + curr_id
+            b_id = 'b' + curr_id
+
+            # if current layer is not the output layer
+            if i < self.num_layers:
+
+                # linear regression
+                if not self.use_dropout:
+                    prev_layer_output = relu_cache[i-1]
+                else:
+                    prev_layer_output = dropout_cache[i-1]
+
+                linear_cache[i] = linear_forward(prev_layer_output, self.params[W_id], self.params[b_id])
+
+                # relu activation
+                relu_cache[i] = relu_forward(linear_cache[i])
+
+                # dropout regularization
+                if self.use_dropout:
+                        dropout_cache[i] = dropout_forward(relu_cache[i], self.dropout_params['p'], self.params[W_id], self.params[b_id])
+            
+            # if current layer is the output layer
+            else:
+
+                # output layer outputs the estimate result of nn, scores
+                if not self.use_dropout:
+                    prev_layer_output = relu_cache[i-1]
+                else:
+                    prev_layer_output = dropout_cache[i-1]
+
+                scores = linear_forward(prev_layer_output, self.params[W_id], self.params[b_id])
+
         #######################################################################
         #                            END OF YOUR CODE                         #
         #######################################################################
