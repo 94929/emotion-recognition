@@ -5,7 +5,6 @@ from src.layers import (linear_forward, linear_backward, relu_forward,
                         relu_backward, dropout_forward, dropout_backward)
 
 
-
 def random_init(n_in, n_out, weight_scale=5e-2, dtype=np.float32):
     """
     Weights should be initialized from a normal distribution with standard
@@ -26,7 +25,6 @@ def random_init(n_in, n_out, weight_scale=5e-2, dtype=np.float32):
     #                            END OF YOUR CODE                             #
     ###########################################################################
     return W, b
-
 
 
 class FullyConnectedNet(object):
@@ -69,8 +67,14 @@ class FullyConnectedNet(object):
         #######################################################################
         #                           BEGIN OF YOUR CODE                        #
         #######################################################################
+        nn_dims = [input_dim] + hidden_dims + [num_classes]
 
+        for i in range(0, self.num_layers):
+            curr_id = str(i+1)
+            W_id = 'W' + curr_id
+            b_id = 'b' + curr_id
 
+            self.params[W_id], self.params[b_id] = random_init(nn_dims[i], nn_dims[i+1])
         #######################################################################
         #                            END OF YOUR CODE                         #
         #######################################################################
@@ -117,7 +121,7 @@ class FullyConnectedNet(object):
         #######################################################################
         #                           BEGIN OF YOUR CODE                        #
         #######################################################################
-
+        
         
         #######################################################################
         #                            END OF YOUR CODE                         #
@@ -139,9 +143,10 @@ class FullyConnectedNet(object):
         #######################################################################
         #                           BEGIN OF YOUR CODE                        #
         #######################################################################
-
-
+        
+        
         #######################################################################
         #                            END OF YOUR CODE                         #
         #######################################################################
         return loss, grads
+
