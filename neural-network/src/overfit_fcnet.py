@@ -10,17 +10,16 @@ TODO: Overfit the network with 50 samples of CIFAR-10
 ###########################################################################
 #                           BEGIN OF YOUR CODE                            #
 ###########################################################################
-model = FullyConnectedNet()
-data = get_CIFAR10_data()
+model = FullyConnectedNet([20, 30])
+data = get_CIFAR10_data(num_training=50)
 solver = Solver(
     model,
-    _data,
+    data,
     lr_decay=0.9,
     batch_size=10,
     num_epochs=20,
     num_train_samples=50
 )
-
 solver.train()
 ##############################################################################
 #                             END OF YOUR CODE                               #
