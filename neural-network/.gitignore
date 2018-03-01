@@ -38,7 +38,13 @@ Thumbs.db
 
 # Custom folders #
 ##################
+data
 manuals
 env
-__pycahe__
+__pycache__
+
+##
+########
+*.swp
 *.pyc
+
