@@ -30,10 +30,9 @@ def softmax(logits, y):
     logits -= np.max(logits)
     logits_exp = np.exp(logits)
     logits_exp_sum = np.sum(logits_exp, axis=1)
-    correct_logits_exp = logits_exp[range(nb_trains), y]
+    expected_logits_exp = logits_exp[range(nb_trains), y]
 
-    loss = -np.sum(np.log(correct_logits_exp / logits_exp_sum))
-    loss /= nb_trains
+    loss = -np.sum(np.log(expected_logits_exp / logits_exp_sum)) / nb_trains
 
     logits_exp_normalized = (logits_exp.T / logits_exp_sum).T
     logits_exp_normalized[range(nb_trains), y] -= 1
