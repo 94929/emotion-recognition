@@ -11,7 +11,21 @@ accuracy on the validation set.
 ###########################################################################
 #                           BEGIN OF YOUR CODE                            #
 ###########################################################################
+#define model and data
+model = FullyConnectedNet(hidden_dims=[20, 30])
+data = get_CIFAR10_data()
 
+# define solver which helps us to train our model using the data
+solver = Solver(
+    model,
+    data,
+    lr_decay=0.95,    
+    num_epochs=30,
+    batch_size=120
+)
+
+# train the model
+solver.train()
 ##############################################################################
 #                             END OF YOUR CODE                               #
 ##############################################################################
