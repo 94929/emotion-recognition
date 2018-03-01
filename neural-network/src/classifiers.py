@@ -26,36 +26,25 @@ def softmax(logits, y):
     #                           BEGIN OF YOUR CODE                            #
     ###########################################################################
     nb_trains, nb_classes = logits.shape
-    for i in range(nb_trains):
 
-        # values for each output layer's neuron
-        outputs = logits[i]
-        
-        # for numeric stability, i.e. regularisation
-        outputs -= np.max(outputs)
-        
-        # the expected value for this 
-        expected_class = y[i]
+    logits -= np.max(logits)
+    logits_exp = np.exp(logits)
+    logits_exp_sum = np.sum(logits_exp, axis=1)
+    correct_logits_exp = logits_exp[range(nb_trains), y]
 
-        # e_x / e_xs
-        exp_output = np.exp(outputs[expected_class])
-        sum_exp_outputs = np.sum(np.exp(outputs))
-
-        # add softmaxed values to loss
-        loss += -np.log(exp_output / sum_exp_outputs)
-
-        # compute the gradient(i.e. derivative)
-        prob_exp_outputs = np.exp(outputs) / sum_exp_outputs
-        
-        # add current exp values(i.e. costs)
-        dlogits[i, :] += prob_exp_outputs
-
-        # reduce cost for the expected class entry
-        dlogits[i, expected_class] -= 1
-
+    #print(correct_logits_exp.shape)
+    #print(logits_exp.shape)
+    #print(logits_exp_sum.shape)
+    loss = -np.sum(np.log(correct_logits_exp / logits_exp_sum))
     loss /= nb_trains
-    dlogits /= nb_trains
+
+    #logits_exp_normalized = logits_exp / logits_exp_sum
+    #logits_exp_normalized[range(nb_trains), y] -= 1
+
+    #grad = logits_exp_normalized / nb_trains
+    
     ###########################################################################
     #                            END OF YOUR CODE                             #
     ###########################################################################
     return loss, dlogits
+
