@@ -112,7 +112,7 @@ def load_FER2013_data(ROOT):
 
 def get_FER2013_data(ROOT):
 
-    trX, trY, teX, teY = load_fer2013_data(ROOT)
+    trX, trY, teX, teY = load_FER2013_data(ROOT)
     vaX = []
     vaY = []
 
