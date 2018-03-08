@@ -37,7 +37,6 @@ def load_CIFAR10(ROOT):
     Xte, Yte = load_CIFAR_batch(os.path.join(ROOT, 'test_batch'))
     return Xtr, Ytr, Xte, Yte
 
-
 def get_CIFAR10_data(num_training=49000, num_validation=1000, num_test=1000,
                      subtract_mean=True):
     """
@@ -78,3 +77,60 @@ def get_CIFAR10_data(num_training=49000, num_validation=1000, num_test=1000,
       'X_val': X_val, 'y_val': y_val,
       'X_test': X_test, 'y_test': y_test,
     }
+
+
+def load_FER_batch(filename):
+    pass
+
+def load_FER2013_data(ROOT):
+    """ load all of fer2013 """
+
+    training_images = []
+    training_labels = []
+    testing_images  = []
+    testing_labels  = []
+
+    with open(os.path.join(ROOT, "labels_public.txt")) as labels_file:
+
+        # Skip the first line
+        next(labels_file) 
+
+        for line in labels_file:
+            line = line.rstrip('\n')
+            tokenised = line.split(',')
+            file = tokenised[0]
+            label = int(tokenised[1])
+            im = cv2.imread(os.path.join(ROOT, file))
+
+            if file.split('/')[0] == 'Train':
+                training_images.append(im)
+                training_labels.append(label)
+            else:
+                testing_images.append(im)
+                testing_labels.append(label)
+    return training_images, training_labels, testing_images, testing_labels
+
+def get_FER2013_data(ROOT):
+
+    trX, trY, teX, teY = load_fer2013_data(ROOT)
+    vaX = []
+    vaY = []
+
+    # Use as many data items in test set for validation
+    for _ in range(len(teX)):
+        vaX.append(trX.pop())
+        vaY.append(trY.pop())
+
+    # Normalize the data: subtract the mean image
+    mean_image = np.mean(trX, axis=0)
+    trX -= mean_image
+    vaX -= mean_image
+    teX -= mean_image
+
+    # Package data into a dictionary
+    return {
+        'X_train': np.array(trX).transpose(0,3,1,2), 'y_train': np.array(trY),
+        'X_val': np.array(vaX).transpose(0,3,1,2), 'y_val': np.array(vaY),
+        'X_test': np.array(teX).transpose(0,3,1,2), 'y_test': np.array(teY),
+    }
+
