@@ -27,17 +27,22 @@ def softmax(logits, y):
     ###########################################################################
     nb_trains, nb_classes = logits.shape
 
+    # loss
     logits -= np.max(logits)
     logits_exp = np.exp(logits)
     logits_exp_sum = np.sum(logits_exp, axis=1)
     expected_logits_exp = logits_exp[range(nb_trains), y]
 
-    loss = -np.sum(np.log(expected_logits_exp / logits_exp_sum)) / nb_trains
+    loss -= np.sum(np.log(expected_logits_exp / logits_exp_sum))
 
+    # grads
     logits_exp_normalized = (logits_exp.T / logits_exp_sum).T
     logits_exp_normalized[range(nb_trains), y] -= 1
 
-    dlogits += logits_exp_normalized / nb_trains
+    dlogits += logits_exp_normalized
+
+    loss /= nb_trains
+    dlogits /= nb_trains
     ###########################################################################
     #                            END OF YOUR CODE                             #
     ###########################################################################
