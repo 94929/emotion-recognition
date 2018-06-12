@@ -36,15 +36,15 @@
 ehthumbs.db
 Thumbs.db
 
-# Custom folders #
-##################
-data
-manuals
-env
-__pycache__
+# Custom dirs #
+###############
+data/
+manuals/
+env/
+__pycache__/
 
-##
-########
+# Custom files #
+################
 *.swp
 *.pyc
 
