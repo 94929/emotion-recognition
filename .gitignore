@@ -38,13 +38,10 @@ Thumbs.db
 
 # Custom dirs #
 ###############
-data/
-manuals/
-env/
 __pycache__/
 
 # Custom files #
 ################
 *.swp
 *.pyc
-
+.coverage
